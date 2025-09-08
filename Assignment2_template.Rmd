@@ -233,10 +233,8 @@ normal and expected from sequencing quality or detection between the two differe
 we should have similar adapter trimming in both reads. Cco's R1 was trimmed more than R2, suggesting that there may be adapter accumulation or low quality bases more present in
 the forward read. Whereas in CcoxCrh, R2 was trimmed more than R1 which is expected.  
 
-```
-![Cco read len distr](/projects/bgmp/tnair/bioinfo/Bi623/PS2/QAA/plots/Cco_com101_EO_adult_1_readdistr_posttrim.png)
-![CcoxCrh read len distr](/projects/bgmp/tnair/bioinfo/Bi623/PS2/QAA/plots/CcoxCrh_comrhy110_EO_adult_1_readdistr_posttrim.png)
-```
+![Cco read len distr](/Users/thejesnair/bioinfo/Bi623/PS/Cco_com101_EO_adult_1_readdistr_posttrim.png)
+![CcoxCrh read len distr](/Users/thejesnair/bioinfo/Bi623/PS/CcoxCrh_comrhy110_EO_adult_1_readdistr_posttrim.png)
 
 [Include your plot and comment on R1/R2 adapter trimming]
 
