@@ -409,12 +409,12 @@ Review the [publication](https://doi.org/10.1093/molbev/msae021) from PRJNA10052
 [Add insights to the dataset]
 
 ## Upload your:
-- [ ] lab notebook
-- [ ] Talapas batch script/code
-- [ ] FastQC plots
-- [ ] counts files generated from htseq-count (in a folder would be nice; **only include the counts files that would be used in a future differential RNA-seq analysis: use the format Species_sample_tissue_age/size_sample#_readnumber_htseqcounts_[revORyes]stranded.txt**)
+- [X] lab notebook
+- [X] Talapas batch script/code
+- [X] FastQC plots
+- [X] counts files generated from htseq-count (in a folder would be nice; **only include the counts files that would be used in a future differential RNA-seq analysis: use the format Species_sample_tissue_age/size_sample#_readnumber_htseqcounts_[revORyes]stranded.txt**)
 - [ ] pdf report (see below; turn into both Github AND Canvas)
-- [ ] and any additional plots, code, or code output
+- [X] and any additional plots, code, or code output
 
 to GitHub.
     
