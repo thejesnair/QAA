@@ -354,6 +354,11 @@ CcoxCrh
 Mapped reads: 9524551
 Unmapped reads: 977002
 
+| Sample    | Mapped Reads | Unmapped Reads |
+|-----------|--------------|----------------|
+| Cco_com101_EO_adult_1       | 35,718,855   | 16,734,296     |
+| CcoxCrh_comrhy110_EO_adult_1   | 9,524,551    | 977,002        |
+
 14. Count deduplicated reads that map to features using `htseq-count`. You should run htseq-count twice: once with `--stranded=yes` and again with `--stranded=reverse`. Use default parameters otherwise. You may need to use the `-i` parameter for this run.
 
 ```{bash, eval=FALSE}
