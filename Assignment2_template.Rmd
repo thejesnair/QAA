@@ -99,17 +99,17 @@ results seen in fastqc's plot. There are no differences in the trends only that 
 like the box whisker plots for each position as well as the quality of calls (green, orange, or red). 
 
 
-![Cco fastqc R1](/projects/bgmp/tnair/bioinfo/Bi623/PS2/Cco_fastqc_per_base_quality_1.png)
-![Cco fastqc R2](/projects/bgmp/tnair/bioinfo/Bi623/PS2/Cco_fastqc_per_base_quality_2.png)
+![Cco fastqc R1](/projects/bgmp/tnair/bioinfo/Bi623/PS2/QAA/plots/Cco_com101_EO_adult_1_1_fastqc_per_base_quality.png)
+![Cco fastqc R2](/projects/bgmp/tnair/bioinfo/Bi623/PS2/QAA/plots/Cco_com101_EO_adult_1_2_fastqc_per_base_quality.png)
 
-![Cco demux script R1](/projects/bgmp/tnair/bioinfo/Bi623/PS2/Cco_com101_EO_adult_1_1_QSdistr.png)
-![Cco demux script R2]()/projects/bgmp/tnair/bioinfo/Bi623/PS2/Cco_com101_EO_adult_1_2_QSdistr.png
+![Cco demux script R1](/projects/bgmp/tnair/bioinfo/Bi623/PS2/QAA/plots/Cco_com101_EO_adult_1_1_QSdistr.png)
+![Cco demux script R2](/projects/bgmp/tnair/bioinfo/Bi623/PS2/QAA/plots/Cco_com101_EO_adult_1_2_QSdistr.png)
 
-![CcoxCrh fastqc R1](/projects/bgmp/tnair/bioinfo/Bi623/PS2/CcoxCrh_fastqc_per_base_quality_1.png)
-![CcoxCrh fastqc R2](/projects/bgmp/tnair/bioinfo/Bi623/PS2/CcoxCrh_fastqc_per_base_quality_2.png)
+![CcoxCrh fastqc R1](/projects/bgmp/tnair/bioinfo/Bi623/PS2/QAA/plots/CcoxCrh_comrhy110_EO_adult_1_1_fastqc_per_base_quality.png)
+![CcoxCrh fastqc R2](/projects/bgmp/tnair/bioinfo/Bi623/PS2/QAA/plots/CcoxCrh_comrhy110_EO_adult_1_2_fastqc_per_base_quality.png)
 
-![CcoxCrh demux script R1](/projects/bgmp/tnair/bioinfo/Bi623/PS2/CcoxCrh_comrhy110_EO_adult_1_1_QSdistr.png)
-![CcoxCrh demux script R2](/projects/bgmp/tnair/bioinfo/Bi623/PS2/CcoxCrh_comrhy110_EO_adult_1_2_QSdistr.png)
+![CcoxCrh demux script R1](/projects/bgmp/tnair/bioinfo/Bi623/PS2/QAA/plots/CcoxCrh_comrhy110_EO_adult_1_1_QSdistr.png)
+![CcoxCrh demux script R2](/projects/bgmp/tnair/bioinfo/Bi623/PS2/QAA/plots/CcoxCrh_comrhy110_EO_adult_1_2_QSdistr.png)
 
 
 [Include quality score distribution plot, a comparison to FastQC, comments on any differences between your quality score plotting and FastQC]
@@ -220,8 +220,8 @@ normal and expected from sequencing quality or detection between the two differe
 we should have similar adapter trimming in both reads. Cco's R1 was trimmed more than R2, suggesting that there may be adapter accumulation or low quality bases more present in
 the forward read. Whereas in CcoxCrh, R2 was trimmed more than R1 which is expected.  
 
-![Cco read len distr](/projects/bgmp/tnair/bioinfo/Bi623/PS2/Cco_read_len_distr.png)
-![CcoxCrh read len distr](/projects/bgmp/tnair/bioinfo/Bi623/PS2/CcoxCrh_read_len_distr.png)
+![Cco read len distr](/projects/bgmp/tnair/bioinfo/Bi623/PS2/QAA/plots/Cco_com101_EO_adult_1_readdistr_posttrim.png)
+![CcoxCrh read len distr](/projects/bgmp/tnair/bioinfo/Bi623/PS2/QAA/plots/CcoxCrh_comrhy110_EO_adult_1_readdistr_posttrim.png)
 
 
 [Include your plot and comment on R1/R2 adapter trimming]
