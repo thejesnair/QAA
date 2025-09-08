@@ -27,6 +27,16 @@ You are responsible for downloading this data from NCBI SRA, dumping into FASTQ 
 
 ```{bash, eval=FALSE}
 ## Download your data
+
+#commands used to create sra conda environment in ICA1
+srun -A bgmp -p bgmp --time=1:00:00 --pty bash
+conda create -n sra
+conda activate sra
+conda install bioconda::sra-tools
+
+#download data
+prefetch SRR25630408
+prefetch SRR25630384
 ```
 
 ## Part 1 – Read quality score distributions
@@ -37,14 +47,70 @@ You are responsible for downloading this data from NCBI SRA, dumping into FASTQ 
 [Record details on how you made the conda environment]
 
 ```{bash, eval=FALSE}
+srun -A bgmp -p bgmp --time=1:00:00 --pty bash
+conda create -n QAA -c conda-forge -c bioconda python=3.10 fastqc=0.12.1 trimmomatic=0.39 cutadapt=5.0
 
+fastqc --version
+trimmomatic -version
+cutadapt --version
 ```
+FastQC: 0.12.1
+Trimmomatic: 0.40
+Cutadapt: 5.0
+
 
 2. Using `FastQC` via the command line on Talapas, produce plots of the per-base quality score distributions for R1 and R2 reads. Also, produce plots of the per-base N content, and comment on whether or not they are consistent with the quality score plots.
+
+```{bash, eval=FALSE}
+conda activate QAA
+fastqc SRR25630384_1.fastq.gz SRR25630384_2.fastq.gz
+fastqc SRR25630408_1.fastq.gz SRR25630408_2.fastq.gz
+
+#pull out images for per-base qs and per base N content
+unzip -p SRR25630384_1_fastqc.zip "*/Images/per_base_quality.png" > CcoxCrh_fastqc_per_base_quality_1.png
+unzip -p SRR25630384_1_fastqc.zip "*/Images/per_base_n_content.png" > CcoxCrh_fastqc_per_base_n_content_1.png
+```
+![Cco per base quality R1](/projects/bgmp/tnair/bioinfo/Bi623/PS2/Cco_fastqc_per_base_quality_1.png)
+![Cco per base quality R2](/projects/bgmp/tnair/bioinfo/Bi623/PS2/Cco_fastqc_per_base_quality_2.png)
+![Cco per base n content R1](/projects/bgmp/tnair/bioinfo/Bi623/PS2/Cco_fastqc_per_base_n_content_1.png)
+![Cco per base n content R1](/projects/bgmp/tnair/bioinfo/Bi623/PS2/Cco_fastqc_per_base_n_content_2.png)
+
+![CcoxCrh per base quality R1](/projects/bgmp/tnair/bioinfo/Bi623/PS2/CcoxCrh_fastqc_per_base_quality_1.png)
+![CcoxCrh per base quality R2](/projects/bgmp/tnair/bioinfo/Bi623/PS2/CcoxCrh_fastqc_per_base_quality_2.png)
+![CcoxCrh per base n content R1](/projects/bgmp/tnair/bioinfo/Bi623/PS2/CcoxCrh_fastqc_per_base_n_content_1.png)
+![CcoxCrh per base n content R1](/projects/bgmp/tnair/bioinfo/Bi623/PS2/CcoxCrh_fastqc_per_base_n_content_2.png)
+
+The quality of the per base QS distribution is consistent in both plots R1 and R2 have a similar shape. Fastqc shows that the quality passes and is high across. QS starts at ~36-37 and tapers
+down to ~34-35, which is to be expected. The whiskers extend more towards the end but the mean reads still stay within the green range.
+The per base n content for both reads is at 0% even when the QS starts to decline towards the end of the read which supports the confidence of the 
+results seen in the fastqc per base qs distribution plots.  
 
 [Include FastQC commands, plots of per-base N content, comments on consistency with quality score plots]
 
 3. Run your quality score plotting script from your Demultiplexing assignment in Bi622. (Make sure you're using the "running sum" strategy!!) Describe how the `FastQC` quality score distribution plots compare to your own. If different, propose an explanation. Also, does the run time differ? Mem/CPU usage? If so, why?
+
+I was unable to run an sbatch using fastqc, because of maintenance on Talapas. It took <10 mins for each readpair (so ~20 mins total). I tested and confirmed by rerunning an sbatch on one readpair.
+My demux script took ~30 mins to run for all four readpairs. The CPU usage was the same between the two approaches, 97-99% but the memory needed for 
+fastqc was much greater than the demux script (593452 kbytes vs ~ 64000-70000 kbytes). This makes sense because fastqc is generating much more informative plots 
+and additional information than the single QS distribution plot my demux script does and does so with the same CPU %. 
+
+Both plots show similar trends with QS distribution being around 36-37 and then a slight decline to 34-35 by the bp 150. My script reflects the 
+results seen in fastqc's plot. There are no differences in the trends only that the fastqc is more informative with its plot and tells you additional informaiton
+like the box whisker plots for each position as well as the quality of calls (green, orange, or red). 
+
+
+![Cco fastqc R1](/projects/bgmp/tnair/bioinfo/Bi623/PS2/Cco_fastqc_per_base_quality_1.png)
+![Cco fastqc R2](/projects/bgmp/tnair/bioinfo/Bi623/PS2/Cco_fastqc_per_base_quality_2.png)
+
+![Cco demux script R1](/projects/bgmp/tnair/bioinfo/Bi623/PS2/Cco_com101_EO_adult_1_1_QSdistr.png)
+![Cco demux script R2]()/projects/bgmp/tnair/bioinfo/Bi623/PS2/Cco_com101_EO_adult_1_2_QSdistr.png
+
+![CcoxCrh fastqc R1](/projects/bgmp/tnair/bioinfo/Bi623/PS2/CcoxCrh_fastqc_per_base_quality_1.png)
+![CcoxCrh fastqc R2](/projects/bgmp/tnair/bioinfo/Bi623/PS2/CcoxCrh_fastqc_per_base_quality_2.png)
+
+![CcoxCrh demux script R1](/projects/bgmp/tnair/bioinfo/Bi623/PS2/CcoxCrh_comrhy110_EO_adult_1_1_QSdistr.png)
+![CcoxCrh demux script R2](/projects/bgmp/tnair/bioinfo/Bi623/PS2/CcoxCrh_comrhy110_EO_adult_1_2_QSdistr.png)
+
 
 [Include quality score distribution plot, a comparison to FastQC, comments on any differences between your quality score plotting and FastQC]
 
@@ -52,13 +118,32 @@ You are responsible for downloading this data from NCBI SRA, dumping into FASTQ 
 
 [Include comments on data quality and recommendation on whether this can be used for further analysis]
 
+The overall quality of the reads are good and can be used for further downstream analysis. The per base sequence quality passed fastqc's parameters for both R1 and R2 for both SRR files run.
+The quality scores were consistently high and tapered slowly towards the end of the 150 bps, but this is to be expected with Illumina sequencing, the %N content passes too with ~0% N's being detected.
+This is consistent with the high qs observed. There are fail flags for things like adapater content, overrepresented sequences, or per sequence GC content.
+We expect there to be reptition because adapters present in the raw reads, high GC content can also be an indication of contamination of a highly over expressed gene.
+
+The pass flags indicate our data is good, and the fail flags are expected especially when considering things like adapters and potential of overexpressed
+genes. By trimming the adapters out of our data and any low QS tails we can proceed with further analysis. 
+
 ## Part 2 – Adaptor trimming comparison
 
 5.  If you haven't already in your QAA environment, install `Cutadapt` and `Trimmomatic`. Check your installations with:
     - `cutadapt --version` (should be 5.0)
     - `trimmomatic -version` (should be 0.39)
 
+```bash
+conda activate
+fastqc --version
+trimmomatic -version
+cutadapt --version
+```
+FastQC: 0.12.1
+Trimmomatic: 0.40
+Cutadapt: 5.0
+
 [Record details on install (if happened here) and/or version checking]
+
 
 6. Using `Cutadapt`, properly trim adapter sequences from your assigned files. Be sure to read how to use `Cutadapt`. Use default settings. What proportion of reads (both R1 and R2) were trimmed?
 
@@ -72,10 +157,38 @@ You are responsible for downloading this data from NCBI SRA, dumping into FASTQ 
 
     - *Sanity check*: Use your Unix skills to search for the adapter sequences in your datasets and confirm the expected sequence orientations. Report the commands you used, the reasoning behind them, and how you confirmed the adapter sequences.
     
-[Include commands and report out the proportion of reads trimmed]    
+[Include commands and report out the proportion of reads trimmed]
+
+https://support-docs.illumina.com/SHARE/AdapterSequences/Content/SHARE/AdapterSeq/TruSeq/CDIndexes.htm
+Illumina adapters:
+R1: AGATCGGAAGAGCACACGTCTGAACTCCAGTCA
+R2: AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT
+Seed (13-nt) shared by both: AGATCGGAAGAGC
+The first thirteen nucleotides of both R1 and R2 adapters are the same. We can use unix commands to search for this seed pattern in our reads towards the 3' end.
+Checking the last 30 nts shows that the adapter is specifically enriched within this window, filtering out random hits throughout the read. These identified 
+adapters will later be trimmed with cutadapt. Taking into account the fastqc results regarding adapter content, we can confirm that the adapters are in the correct position as well as the expected sequence orientation. 
+To further confirm this we can look for the adapter in the 5' start and the expected number should be much lower further indicating that the adapters are correctly placed. We can be confident about the 
+sequences and orientation and officially confirm through the use of cutadapt.
+
 
 ```{bash, eval=FALSE}
+#check 3' end for adapter
+zcat CcoxCrh_comrhy110_EO_adult_1_1.fastq.gz | sed -n '2~4p' | awk '{print substr($0,length($0)-29)}' | grep -Ec 'AGATCGGAAGAGC'
 
+#check 5' end for adapter, should yield zero
+zcat Cco_com101_EO_adult_1_1.fastq.gz | sed -n '2~4p' | awk '{print substr($0,1,30)}' | grep -Ec '^AGATCGGAAGAGC'
+```
+
+Proportion of reads trimmed
+
+```bash
+Cco_com101_EO_adult_1
+  R1: 17.4% reads trimmed
+  R2: 17.0% reads trimmed
+
+CcoxCrh_comrhy110_EO_adult_1
+  R1: 21.8% reads trimmed
+  R2: 21.6% reads trimmed
 ```
 
 7. Use `Trimmomatic` to quality trim your reads. Specify the following, **in this order**:
@@ -86,16 +199,35 @@ You are responsible for downloading this data from NCBI SRA, dumping into FASTQ 
 
     Be sure to output compressed files and clear out all intermediate files.
 
+Ran command in slurm script
 ```{bash, eval=FALSE}
+#command in slurm
+/usr/bin/time -v trimmomatic PE -threads 8 -phred33 $Cco_1_trimmed $Cco_2_trimmed \
+    $Cco_1_qualtrim_paired $Cco_1_qualtrim_UNpaired \
+    $Cco_2_qualtrim_paired $Cco_2_qualtrim_UNpaired \
+    LEADING:3 TRAILING:3 SLIDINGWINDOW:5:15 MINLEN:35 
 
+#command in terminal
+rm -f *_UNpaired.fastq.gz
 ```
 
 8. Plot the trimmed read length distributions for both paired R1 and paired R2 reads (on the same plot - yes, you will have to use Python or R to plot this. See ICA4 from Bi621). You can produce 2 different plots for your 2 different RNA-seq samples. There are a number of ways you could possibly do this. One useful thing your plot should show, for example, is whether R1s are trimmed more extensively than R2s, or vice versa. Comment on whether you expect R1s and R2s to be adapter-trimmed at different rates and why.
 
+The plots are left skewed, the majority of the reads peak around 150 bps in both datasets. Adapter trimming is similar between R1 and R2, which we saw in the
+cudadapt metrics after trimming. I don't expect a big difference in adapter trimming between reads because of the insert size and read lengths, however it is common for 
+R2 to be more trimmed because R2 has lower 3' quality on Illumina instruments so more bases were removed using Trimmomatic's quality filtering. The small differences we see are
+normal and expected from sequencing quality or detection between the two different reads. If libraries were prepped properly, read lengths, and inserts are around the same size
+we should have similar adapter trimming in both reads. Cco's R1 was trimmed more than R2, suggesting that there may be adapter accumulation or low quality bases more present in
+the forward read. Whereas in CcoxCrh, R2 was trimmed more than R1 which is expected.  
+
+![Cco read len distr](/projects/bgmp/tnair/bioinfo/Bi623/PS2/Cco_read_len_distr.png)
+![CcoxCrh read len distr](/projects/bgmp/tnair/bioinfo/Bi623/PS2/CcoxCrh_read_len_distr.png)
+
+
 [Include your plot and comment on R1/R2 adapter trimming]
 
 ```{R, eval=TRUE}
-
+#ran python script, not R
 ```
 
 9. Bonus - Run `FastQC` on your trimmed data. Comment on differences you observe between the trimmed and untrimmed data. Include any figures needed to support your conclusions.
@@ -118,7 +250,14 @@ You are responsible for downloading this data from NCBI SRA, dumping into FASTQ 
 [Record details on how you installed these packages]
 
 ```{bash, eval=FALSE}
+conda activate QAA
 
+conda install bioconda::star
+conda install bioconda::picard
+conda install bioconda::samtools
+conda install bioconda::htseq
+
+conda install -c conda-forge numpy matplotlib
 ```
 
 11. Download the publicly available *Campylomormyrus compressirostris* genome fasta and gff file from [Dryad](https://datadryad.org/dataset/doi:10.5061/dryad.c59zw3rcj) and generate an alignment database from it. If the download fails, the files are available `/projects/bgmp/shared/Bi623/PS2/campylomormyrus.fasta`, `/projects/bgmp/shared/Bi623/PS2/campylomormyrus.gff`. Align the reads to your *C. compressirostris* database using a splice-aware aligner. Use the settings specified in PS8 from Bi621. 
@@ -129,7 +268,32 @@ You are responsible for downloading this data from NCBI SRA, dumping into FASTQ 
 [Record details on how you downloaded the genome, prepared the dataset for alignment, and commands for generating the alignment database and aligning reads]
     
 ```{bash, eval=FALSE}
+#unable to download fr Dryad, cp from Talapas location
 
+cp /projects/bgmp/shared/Bi623/PS2/campylomormyrus.fasta .
+cp /projects/bgmp/shared/Bi623/PS2/campylomormyrus.gff .
+
+#need gffread to convert gff to gtf
+conda install bioconda::gffread
+gffread campylomormyrus.gff -T -o campylomormyrus.gtf
+
+#slurm script to generate database
+/usr/bin/time -v STAR --runThreadN 8 \
+--runMode genomeGenerate \
+--genomeDir /projects/bgmp/tnair/bioinfo/Bi623/PS2/part3_alignment/campylomormyrus.STAR_2.7.11b \
+--genomeFastaFiles /projects/bgmp/tnair/bioinfo/Bi623/PS2/part3_alignment/campylomormyrus.fasta \
+--sjdbGTFfile /projects/bgmp/tnair/bioinfo/Bi623/PS2/part3_alignment/campylomormyrus.gtf \
+--genomeSAindexNbases 13
+
+#slurm script to align reads
+/usr/bin/time -v STAR --runThreadN 8 --runMode alignReads \
+--outFilterMultimapNmax 3 \
+--outSAMunmapped Within KeepPairs \
+--alignIntronMax 1000000 --alignMatesGapMax 1000000 \
+--readFilesCommand zcat \
+--readFilesIn  $Cco_R1 $Cco_R2 \
+--genomeDir $genome_dir \
+--outFileNamePrefix $Cco_alignment
 ```
 
 12. Remove PCR duplicates using [Picard MarkDuplicates](https://broadinstitute.github.io/picard/command-line-overview.html#MarkDuplicates). You may need to sort your reads with `samtools` before running Picard. 
@@ -137,17 +301,57 @@ You are responsible for downloading this data from NCBI SRA, dumping into FASTQ 
  
 
 ```{bash, eval=FALSE}
+#convert to BAM and sort
+/usr/bin/time -v samtools view -b $CcoxCrh_sam | samtools sort -o $CcoxCrh_sorted_bam
 
+# Add readgroups 
+/usr/bin/time -v picard AddOrReplaceReadGroups \
+    I=$Cco_sorted_bam \
+    O=$Cco_sorted_RG \
+    RGID=1 \
+    RGLB=lib1 \
+    RGPL=illumina \
+    RGPU=unit1 \
+    RGSM=Cco \
+    VALIDATION_STRINGENCY=LENIENT
+
+  
+#deduplication with picard
+/usr/bin/time -v picard MarkDuplicates INPUT=$CcoxCrh_sorted_bam OUTPUT=$CcoxCrh_dedup_bam METRICS_FILE=$CcoxCrh_dedup_metrics \
+REMOVE_DUPLICATES=TRUE VALIDATION_STRINGENCY=LENIENT
 ```
 
 13. Using your script from PS8 in Bi621, report the number of mapped and unmapped reads from each of your 2 SAM files post deduplication with picard. Make sure that your script is looking at the bitwise flag to determine if reads are primary or secondary mapping (update/fix your script if necessary).
 
 [Include the number of mapped and unmapped reads from both same files]
 
+```{bash, eval=FALSE}
+#convert to SAM
+samtools view -h -o Cco_dedup.sam CcoxCrh_dedup.bam
+
+#Count reads
+./is_mapped.py -f /projects/bgmp/tnair/bioinfo/Bi623/PS2/part3_alignment/Cco_dedup.sam
+```
+Cco
+Mapped reads: 35718855
+Unmapped reads: 16734296
+
+CcoxCrh
+Mapped reads: 9524551
+Unmapped reads: 977002
+
 14. Count deduplicated reads that map to features using `htseq-count`. You should run htseq-count twice: once with `--stranded=yes` and again with `--stranded=reverse`. Use default parameters otherwise. You may need to use the `-i` parameter for this run.
 
 ```{bash, eval=FALSE}
+#check gene id col for -idattr (-i) col
+head campylomormyrus.gtf
 
+#check what the gene id col looks like for --idattr (-i) parameter
+head campylomormyrus.gtf
+
+#Cco
+htseq-count --format=bam --order=pos --stranded=yes --type=exon --idattr=gene_id $Cco_bam $campie_gtf > $Cco_stranded_yes
+htseq-count --format=bam --order=pos --stranded=reverse --type=exon --idattr=gene_id $Cco_bam $campie_gtf > $Cco_stranded_reverse
 ```
 
 15. Demonstrate convincingly whether or not the data are from "strand-specific" RNA-Seq libraries **and** which `stranded=` parameter should you use for counting your reads for a future differential gene expression analyses. Include any commands/scripts used. Briefly describe your evidence, using quantitative statements (e.g. "I propose that these data are/are not strand-specific, because X% of the reads are y, as opposed to z."). This [kit](https://www.revvity.com/product/nex-rapid-dir-rna-seq-kit-2-0-8rxn-nova-5198-01) was used during library preparation. This [paper](https://academic.oup.com/bfg/article/19/5-6/339/5837822) may provide helpful information.
@@ -156,6 +360,27 @@ You are responsible for downloading this data from NCBI SRA, dumping into FASTQ 
   > Recall ICA4 from Bi621.
 
 [Describe whether your reads are "string-specific", why you think they are, any evidence, and which stranded parameter is appropriate and why]
+
+By comparing assigned gene counts between the two different stranded parameters, we can see that for both datasets the reverse condition had far greater number of 
+reads assigned. 
+
+```bash
+#determine no of assigned reads
+awk '$1 !~ /^__/ {s+=$2} END{print s+0}' Cco_counts_stranded_yes.txt
+
+#determine no feature, ambiguous reads 
+tail Cco_counts_stranded_yes.txt
+```
+### HTSeq-count results: stranded=yes vs stranded=reverse
+
+| Sample    | Strandedness | Assigned Reads | __no_feature | __ambiguous |
+|-----------|--------------|----------------|--------------|-------------|
+| **Cco**   | yes          |     555,332    | 16,650,247   |     2,263   |
+|           | reverse      |  10,328,955    |  6,747,807   |   131,080   |
+| **CcoxCrh** | yes        |     138,529    |  4,448,568   |       427   |
+|           | reverse      |   2,745,246    |  1,808,597   |    33,681   |
+
+
 
 16. BONUS - Turn your commands from part 1 and 2 into a script with a loop going through your two SRA files
 
