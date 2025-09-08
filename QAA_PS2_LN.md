@@ -563,6 +563,12 @@ awk '$1 !~ /^__/ {s+=$2} END{print s+0}' Cco_counts_stranded_yes.txt
 tail Cco_counts_stranded_yes.txt
 ```
 
+```bash
+#calcualte values for table
+python -c "print(555332 + 16650247 + 2263 + 119120 + 8853141 + 593473)"
+python -c"print(555332/26773576 * 100)"
+```
+
 Cco_stranded_yes
 assigned reads: 555332
 __no_feature    16650247
@@ -570,6 +576,8 @@ __ambiguous     2263
 __too_low_aQual 119120
 __not_aligned   8853141
 __alignment_not_unique  593473
+
+total: 26773576
 
 Cco_stranded_reverse
 assigned reads: 10328955
@@ -579,6 +587,8 @@ __too_low_aQual 119120
 __not_aligned   8853141
 __alignment_not_unique  593473
 
+total: 26773576
+
 CcoxCrh_stranded_yes
 assigned reads: 138529
 __no_feature    4448568
@@ -586,6 +596,8 @@ __ambiguous     427
 __too_low_aQual 3126
 __not_aligned   491389
 __alignment_not_unique  173254
+
+total: 5255293
 
 CcoxCrh_stranded_reverse
 assigned reads: 2745246
@@ -595,13 +607,10 @@ __too_low_aQual 3126
 __not_aligned   491389
 __alignment_not_unique  173254
 
+total: 5255293
 
 
-
-
-
-
-
+Conclusion: strand specific libraries, reverse stranded used for downstream analysis 
 
 
 ### HTSeq-count results: stranded=yes vs stranded=reverse
@@ -612,3 +621,11 @@ __alignment_not_unique  173254
 |           | reverse      |  10,328,955    |  6,747,807   |   131,080   |
 | **CcoxCrh** | yes        |     138,529    |  4,448,568   |       427   |
 |           | reverse      |   2,745,246    |  1,808,597   |    33,681   |
+
+
+| Sample      |      Strandedness       |   Assigned Reads |   Total Reads | % Assigned   | |
+|:-------------| -------------|-----------------:|--------------:|:-------------|----- |
+| **Cco** |     yes    |           555,332 |     26,773,576 | 2.07%        | |
+|   |  reverse  |        10,328,955 |     26,773,576 | 38.58%       | |
+| **CcoxCrh**  |  yes  |           138,529 |      5,255,293 | 2.64%        | |
+| | reverse  |         2,745,246 |      5,255,293 | 52.24%       | |

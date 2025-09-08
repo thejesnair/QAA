@@ -361,8 +361,19 @@ htseq-count --format=bam --order=pos --stranded=reverse --type=exon --idattr=gen
 
 [Describe whether your reads are "string-specific", why you think they are, any evidence, and which stranded parameter is appropriate and why]
 
-By comparing assigned gene counts between the two different stranded parameters, we can see that for both datasets the reverse condition had far greater number of 
-reads assigned. 
+By comparing assigned gene counts between the two different stranded parameters, we can see that for both datasets the reverse condition had far greater number of assigned reads and a lower 
+number of reads that were designated as no feature. This indicates strand-specific reverse protocol, further supported by looking at the percentage of total reads that were assigned to reads.
+Cco (stranded yes) had only 2.07% reads assigned compared to 38.58% in the reverse stranded. Similarly with the CcoxCrh data, the percentages are 
+2.64% and 52.24%. 
+
+The no feature reads show the opposite pattern, where reverse strandedness has a lower number than the yes strandedness. This means that fewer reads 
+fell into the no feature category, indicating that the reverse setting matches our library. Additionally, if we look at the ambiguous values the amibugous
+values are greater in the reverse conditions than in the yes strandedness, this simply implies that there are more reads overlapping with real features
+so this pattern is expected. Another thing to consider is that the revvity kit used to generate libraries preserves strand orientation with dUTP 
+second strand synthesis, which means R1 maps to the antisense strand which is what we mark as reverse stranded in htseq-count. Our results 
+confirm this since we had a far greater number of reads with reverse strandedness and a reduced number of reads that were no feature. 
+
+The libraries are strand specific and we should utilize reverse strandedness for downstream analysis like DGE. 
 
 ```bash
 #determine no of assigned reads
@@ -379,6 +390,13 @@ tail Cco_counts_stranded_yes.txt
 |           | reverse      |  10,328,955    |  6,747,807   |   131,080   |
 | **CcoxCrh** | yes        |     138,529    |  4,448,568   |       427   |
 |           | reverse      |   2,745,246    |  1,808,597   |    33,681   |
+
+| Sample      |      Strandedness       |   Assigned Reads |   Total Reads | % Assigned   | |
+|:-------------| -------------|-----------------:|--------------:|:-------------|----- |
+| **Cco** |     yes    |           555,332 |     26,773,576 | 2.07%        | |
+|   |  reverse  |        10,328,955 |     26,773,576 | 38.58%       | |
+| **CcoxCrh**  |  yes  |           138,529 |      5,255,293 | 2.64%        | |
+| | reverse  |         2,745,246 |      5,255,293 | 52.24%       | |
 
 
 
